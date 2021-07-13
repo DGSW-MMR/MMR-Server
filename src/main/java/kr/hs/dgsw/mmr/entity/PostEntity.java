@@ -16,6 +16,9 @@ public class PostEntity {
     @Column(name = "post_id")
     private int postId;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "summary")
     private String summary;
 
@@ -32,7 +35,17 @@ public class PostEntity {
     private String imageUrl;
 
     @ManyToOne
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
+
+    public PostEntity(String title, String summary, String content, String likePeople, int likeNum, String imageUrl, UserEntity userEntity) {
+        this.title = title;
+        this.summary = summary;
+        this.content = content;
+        this.likePeople = likePeople;
+        this.likeNum = likeNum;
+        this.imageUrl = imageUrl;
+        this.userEntity = userEntity;
+    }
 
 }

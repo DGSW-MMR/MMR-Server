@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "material_table")
 public class MaterialEntity {
 
@@ -23,7 +22,14 @@ public class MaterialEntity {
     private String url;
 
     @ManyToOne
-    @Column(name = "post_id")
+    @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
+    public MaterialEntity(String name, String url, PostEntity postEntity) {
+        this.name = name;
+        this.url = url;
+        this.postEntity = postEntity;
+    }
+
+    public MaterialEntity() { }
 }
