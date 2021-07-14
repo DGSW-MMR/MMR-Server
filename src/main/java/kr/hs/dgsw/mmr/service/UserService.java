@@ -16,7 +16,7 @@ public class UserService {
 
     public String login(LoginRequest loginRequest) throws CustomException {
 
-        UserEntity userEntity = userRepository.findById(loginRequest.getId()).orElseThrow(()->new CustomException(401, "아이디와 패스워드를 확인해주세요"));
+        UserEntity userEntity = userRepository.findById(loginRequest.getId()).orElseThrow(() -> new CustomException(401, "아이디와 패스워드를 확인해주세요"));
 
         if (userEntity.getPw().equals(loginRequest.getPw())) {
             return userEntity.getName();
@@ -33,6 +33,16 @@ public class UserService {
         }
 
         userRepository.save(new UserEntity(registerRequest.getId(), registerRequest.getPw(), registerRequest.getName()));
+        return true;
+    }
+
+    public Boolean modifyName(String id, String name) throws CustomException {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new CustomException(404, "회원을 찾을 수 없습니다"));
+
+        userEntity.setName(name);
+
+        userRepository.save(userEntity);
+
         return true;
     }
 }

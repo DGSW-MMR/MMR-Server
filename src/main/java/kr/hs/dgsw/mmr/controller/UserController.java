@@ -3,6 +3,7 @@ package kr.hs.dgsw.mmr.controller;
 
 import kr.hs.dgsw.mmr.CustomException;
 import kr.hs.dgsw.mmr.request.LoginRequest;
+import kr.hs.dgsw.mmr.request.ModifyNameRequest;
 import kr.hs.dgsw.mmr.request.RegisterRequest;
 import kr.hs.dgsw.mmr.response.BaseResponse;
 import kr.hs.dgsw.mmr.service.UserService;
@@ -28,6 +29,11 @@ public class UserController {
         Boolean result = userService.register(registerRequest);
 
         return new BaseResponse<>(200, "회원가입 하였습니다", result);
+    }
+
+    @PutMapping("")
+    public BaseResponse<Boolean> modifyName(@RequestBody ModifyNameRequest request) throws CustomException {
+        return new BaseResponse<>(200, "수정에 성공했습니다", userService.modifyName(request.getId(), request.getName()));
     }
 
 }

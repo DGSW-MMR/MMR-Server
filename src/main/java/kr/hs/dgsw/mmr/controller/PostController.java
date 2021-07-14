@@ -65,5 +65,15 @@ public class PostController {
 
     }
 
+    @GetMapping("/my/{userId}")
+    public BaseResponse<List<PostResponse>> getMyPost(@PathVariable String userId) throws CustomException {
+        return new BaseResponse<>(200, "조회 성공", postService.getMyPost(userId));
+    }
+
+    @GetMapping("/like/{userId}/{postId}")
+    public BaseResponse<Boolean> checkLikePost(@PathVariable String userId, @PathVariable int postId) throws CustomException {
+        return new BaseResponse<>(200, "조회 성공", postService.checkLike(userId, postId));
+    }
+
 
 }

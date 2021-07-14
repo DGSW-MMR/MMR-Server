@@ -161,14 +161,48 @@ public class PostService {
         String peopleString = people.stream().reduce((x, y) -> x + "&" + y).orElse("");
         postEntity.setLikePeople(peopleString);
 
-        if(result) {
-            postEntity.setLikeNum(postEntity.getLikeNum()+1);
+        if (result) {
+            postEntity.setLikeNum(postEntity.getLikeNum() + 1);
         } else {
-            postEntity.setLikeNum(postEntity.getLikeNum()-1);
+            postEntity.setLikeNum(postEntity.getLikeNum() - 1);
         }
 
         postRepository.save(postEntity);
         return result;
+    }
+
+    public List<PostResponse> getMyPost(String userId) throws CustomException {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new CustomException(404, ""));
+        ArrayList<PostResponse> postResponses = new ArrayList<>();
+        postRepository.getPostByUser(user.getId()).forEach(it -> {
+            PostResponse postResponse = new PostResponse();
+            postResponse.setId(it.getPostId());
+            postResponse.setContent(it.getContent());
+            postResponse.setImgUrl(it.getImageUrl());
+            postResponse.setLikeNum(it.getLikeNum());
+            postResponse.setTitle(it.getTitle());
+            postResponse.setSummary(it.getSummary());
+            postResponse.setUserName(it.getUserEntity().getName());
+
+
+            ArrayList<MaterialResponse> materialResponses = new ArrayList<>();
+            materialRepository.getMaterialEntityByPostId(it.getPostId())
+                    .forEach(m -> materialResponses.add(new MaterialResponse(m.getName(), m.getUrl())));
+
+            postResponse.setMaterials(materialResponses);
+
+            postResponses.add(postResponse);
+        });
+
+        return postResponses;
+    }
+
+    public Boolean checkLike(String userId, int postId) throws CustomException {
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException(404, "회원 정보가 없습니다"));
+        PostEntity postEntity = postRepository.findById(postId).orElseThrow(() ->
+                new CustomException(404, "존재 하지 않는 게시글입니다"));
+
+        return Arrays.asList(postEntity.getLikePeople().split("&")).contains(userId);
     }
 
 }
